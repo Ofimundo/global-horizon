@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cobertura Regional · Global Horizon</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --green: #017B80;
+            --fuchsia: #D5006D;
+            --black: #000000;
+            --gray-100: #F2F2F2;
+            --white: #FFFFFF;
+            --border: #E6E6E6;
+            --text: #000000;
+            --text-muted: #474747;
+            --card-shadow: 0 2px 10px rgba(0,0,0,.05);
+            --soft-radius: 10px;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text);
+            background: linear-gradient(180deg, var(--gray-100) 0%, #FFFFFF 100%);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* ================== HEADER ================== */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: saturate(140%) blur(10px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-img {
+            height: 64px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        nav {
+            display: flex;
+            gap: 0.25rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        nav > a {
+            color: var(--black);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 800;
+            padding: 0.55rem 0.9rem;
+            border-radius: 8px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            border: 1px solid transparent;
+            transition: 0.2s;
+        }
+
+        nav > a:hover {
+            color: var(--green);
+            border-color: var(--green);
+            background: rgba(1, 123, 128, 0.08);
+        }
+
+        nav > a.active {
+            color: #fff;
+            background: var(--green);
+            border-color: var(--green);
+        }
+
+        .spacer {
+            height: 8px;
+        }
+
+        /* ================== HERO ================== */
+        .hero {
+            background: linear-gradient(135deg, rgba(1, 123, 128, 0.1) 0%, rgba(213, 0, 109, 0.05) 100%);
+            padding: 80px 0 40px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--green);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* ================== MAIN LAYOUT ================== */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 3rem;
+            padding: 3rem 0;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ================== MAP SECTION ================== */
+        .map-section {
+            background: white;
+            border-radius: var(--soft-radius);
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            height: 700px;
+            position: relative;
+        }
+
+        #coverageMap {
+            width: 100%;
+            height: 100%;
+            border-radius: var(--soft-radius);
+        }
+
+        .map-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem;
+            border-radius: var(--soft-radius);
+            box-shadow: var(--card-shadow);
+            z-index: 1000;
+            max-width: 300px;
+        }
+
+        .map-overlay h3 {
+            color: var(--green);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .country-count {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--fuchsia);
+        }
+
+        /* ================== INFO PANEL ================== */
+        .info-panel {
+            background: white;
+            border-radius: var(--soft-radius);
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            height: 700px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .country-header {
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--green);
+            margin-bottom: 1.5rem;
+        }
+
+        .country-header h2 {
+            color: var(--green);
+            font-size: 1.8rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .country-flag {
+            width: 60px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            margin-top: 0.5rem;
+        }
+
+        .clients-section h3 {
+            color: var(--fuchsia);
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid rgba(213, 0, 109, 0.2);
+        }
+
+        .clients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            overflow-y: auto;
+            flex-grow: 1;
+            padding-right: 0.5rem;
+        }
+
+        .client-card {
+            background: var(--gray-100);
+            border-radius: var(--soft-radius);
+            padding: 1rem;
+            border-left: 4px solid var(--green);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .client-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .client-name {
+            font-weight: 700;
+            color: var(--green);
+            margin-bottom: 0.25rem;
+        }
+
+        .client-type {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .client-location {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .no-selection {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .no-selection i {
+            font-size: 4rem;
+            color: var(--green);
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* ================== COUNTRY LIST ================== */
+        .countries-section {
+            padding: 3rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title h2 {
+            font-size: 2rem;
+            color: var(--green);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .countries-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .country-item {
+            background: white;
+            border-radius: var(--soft-radius);
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .country-item:hover, .country-item.active {
+            border-color: var(--green);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .country-item.active {
+            background: rgba(1, 123, 128, 0.05);
+            border-width: 2px;
+        }
+
+        .country-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--fuchsia);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .country-item:hover::before, .country-item.active::before {
+            transform: scaleX(1);
+        }
+
+        .country-emoji {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .country-item h4 {
+            color: var(--green);
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .client-count {
+            background: var(--fuchsia);
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+
+        /* ================== FOOTER ================== */
+        footer {
+            border-top: 1px solid var(--border);
+            background: #fff;
+            color: #313131;
+            margin-top: 4rem;
+            padding: 2rem 0;
+        }
+
+        footer .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        footer a {
+            color: var(--green);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        footer a:hover {
+            color: var(--fuchsia);
+        }
+
+        /* ================== RESPONSIVE ================== */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .map-overlay {
+                position: relative;
+                top: 0;
+                left: 0;
+                margin: 1rem;
+                max-width: none;
+            }
+            
+            .countries-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            footer .container {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .countries-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            nav {
+                flex-direction: column;
+                width: 100%;
+                margin-top: 1rem;
+            }
+            
+            nav > a {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        /* ================== LEAFLET CUSTOM STYLES ================== */
+        .leaflet-marker-icon {
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .marker-cluster {
+            background-color: rgba(1, 123, 128, 0.8) !important;
+            color: white !important;
+        }
+
+        .custom-marker {
+            width: 30px !important;
+            height: 30px !important;
+            margin-left: -15px !important;
+            margin-top: -30px !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== HEADER ===== -->
+    <header>
+        <div class="topbar container">
+            <div class="logo" aria-label="Global Horizon">
+                <img class="logo-img" src="imagenes/logo-GH.png" alt="Global Horizon Logo">
+            </div>
+            <nav>
+        <a href="../public/index.html">Inicio</a>
+        <a href="../public/nosotros.html">Nosotros</a>
+        <a href="../public/marcas.html">Marcas</a>
+        <a href="../public/productos.html">Productos</a>
+        <a href="../public/campañas.html">Campañas</a>       
+        <a href="../public/cobertura.html">Cobertura</a>
+        <a href="../public/index.html#contacto">Contacto</a>
+      </nav>
+        </div>
+    </header>
+    <div class="spacer"></div>
+
+    <!-- ===== HERO SECTION ===== -->
+    <section class="hero">
+        <div class="container">
+            <h1>Cobertura Regional</h1>
+            <p>Nuestra presencia en América Latina con socios estratégicos en cada país</p>
+        </div>
+    </section>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="container">
+        <div class="main-content">
+            <!-- ===== MAP SECTION ===== -->
+            <div class="map-section">
+                <div class="map-overlay">
+                    <h3>Países con Cobertura</h3>
+                    <div class="country-count">9</div>
+                    <p>países en América Latina</p>
+                </div>
+                <div id="coverageMap"></div>
+            </div>
+
+            <!-- ===== INFO PANEL ===== -->
+            <div class="info-panel">
+                <div class="country-header">
+                    <h2 id="selectedCountry">Selecciona un País</h2>
+                    <img id="countryFlag" class="country-flag" src="" alt="" style="display: none;">
+                </div>
+                
+                <div class="clients-section">
+                    <h3>Nuestros Socios</h3>
+                    <div id="clientsList" class="clients-grid">
+                        <div class="no-selection">
+                            <i class="fas fa-globe-americas"></i>
+                            <p>Haz clic en un país del mapa o de la lista para ver nuestros socios comerciales</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== COUNTRIES LIST ===== -->
+        <section class="countries-section">
+            <div class="section-title">
+                <h2>Países con Cobertura</h2>
+                <p>Haz clic en cualquier país para ver detalles</p>
+            </div>
+            <div class="countries-grid" id="countriesList">
+                <!-- Los países se cargarán con JavaScript -->
+            </div>
+        </section>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <div class="container">
+            <p style="font-weight:600">
+                © 2026 Global Horizon SpA. Todos los derechos reservados.
+                &nbsp;·&nbsp;
+                <a href="mailto:info@globalhorizon.cl">info@globalhorizon.cl</a>
+            </p>
+            <p>Santiago, Chile</p>
+        </div>
+    </footer>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Datos de países con cobertura - ACTUALIZADO según la imagen
+        const countriesData = {
+            "peru": {
+                name: "Perú",
+                coordinates: [-9.19, -75.015], // Coordenadas centradas
+                flag: "https://flagcdn.com/w40/pe.png",
+                clients: [
+                    { name: "SimRacing Perú", type: "Distribuidor Oficial", location: "Lima" },
+                    { name: "Gaming Tech PE", type: "Tienda Especializada", location: "Arequipa" },
+                    { name: "Andean Simulation", type: "Centro de Simulación", location: "Cusco" },
+                    { name: "Digital Play PE", type: "E-commerce", location: "Trujillo" }
+                ]
+            },
+            "paraguay": {
+                name: "Paraguay",
+                coordinates: [-23.4425, -58.4438], // Coordenadas centradas
+                flag: "https://flagcdn.com/w40/py.png",
+                clients: [
+                    { name: "SimRacing Paraguay", type: "Distribuidor Oficial", location: "Asunción" },
+                    { name: "Gaming Tech PY", type: "Tienda Especializada", location: "Ciudad del Este" },
+                    { name: "Digital Sports PY", type: "Centro de Simulación", location: "Encarnación" }
+                ]
+            },
+            "uruguay": {
+                name: "Uruguay",
+                coordinates: [-32.5228, -55.7658], // Coordenadas centradas
+                flag: "https://flagcdn.com/w40/uy.png",
+                clients: [
+                    { name: "SimRacing Uruguay", type: "Distribuidor Oficial", location: "Montevideo" },
+                    { name: "Gaming Tech UY", type: "Tienda Especializada", location: "Punta del Este" },
+                    { name: "Digital Sports UY", type: "Centro de Simulación", location: "Colonia" }
+                ]
+            },
+            "argentina": {
+                name: "Argentina",
+                coordinates: [-38.4161, -63.6167], // Coordenadas centradas
+                flag: "https://flagcdn.com/w40/ar.png",
+                clients: [
+                    { name: "SimRacing Argentina", type: "Distribuidor Oficial", location: "Buenos Aires" },
+                    { name: "Gaming Tech AR", type: "Tienda Especializada", location: "Córdoba" },
+                    { name: "High Performance Gaming", type: "Centro de Simulación", location: "Mendoza" },
+                    { name: "Digital Sports", type: "Retail", location: "Rosario" },
+                    { name: "Pro Gamer Store", type: "E-commerce", location: "Buenos Aires" }
+                ]
+            },
+            "chile": {
+                name: "Chile",
+                coordinates: [-35.6751, -71.5430], // Coordenadas centradas
+                flag: "https://flagcdn.com/w40/cl.png",
+                clients: [
+                    { name: "Global Horizon SpA", type: "Casa Matriz", location: "Santiago" },
+                    { name: "Chile Sim Racing", type: "Distribuidor Oficial", location: "Santiago" },
+                    { name: "TechGames Chile", type: "Tienda Especializada", location: "Valparaíso" },
+                    { name: "Andean Gaming", type: "Centro de Simulación", location: "Concepción" },
+                    { name: "Digital Play", type: "Retail Nacional", location: "Santiago" }
+                ]
+            },
+            "brasil": {
+                name: "Brasil",
+                coordinates: [-14.2350, -51.9253], // Coordenadas centradas
+                flag: "https://flagcdn.com/w40/br.png",
+                clients: [
+                    { name: "PlayHard Brasil", type: "Distribuidor Nacional", location: "São Paulo" },
+                    { name: "Simulação Total", type: "Centro de Entrenamiento", location: "Rio de Janeiro" },
+                    { name: "GamerTech BR", type: "Tienda Online", location: "Brasilia" },
+                    { name: "Racing Experience", type: "Simuladores Profesionales", location: "Belo Horizonte" },
+                    { name: "Digital Arena", type: "Retail Chain", location: "Porto Alegre" },
+                    { name: "Pro Gaming Store", type: "E-commerce Premium", location: "Curitiba" }
+                ]
+            },
+            "bolivia": {
+                name: "Bolivia",
+                coordinates: [-16.2902, -63.5887], // Coordenadas centradas
+                flag: "https://flagcdn.com/w40/bo.png",
+                clients: [
+                    { name: "SimRacing Bolivia", type: "Distribuidor Oficial", location: "La Paz" },
+                    { name: "Gaming Tech BO", type: "Tienda Especializada", location: "Santa Cruz" },
+                    { name: "Andean Simulation BO", type: "Centro de Simulación", location: "Cochabamba" }
+                ]
+            },
+            "costarica": {
+                name: "Costa Rica",
+                coordinates: [9.7489, -83.7534], // Coordenadas centradas
+                flag: "https://flagcdn.com/w40/cr.png",
+                clients: [
+                    { name: "SimRacing Costa Rica", type: "Distribuidor Oficial", location: "San José" },
+                    { name: "Gaming Tech CR", type: "Tienda Especializada", location: "Alajuela" },
+                    { name: "Digital Sports CR", type: "Centro de Simulación", location: "Heredia" }
+                ]
+            },
+            "colombia": {
+                name: "Colombia",
+                coordinates: [4.5709, -74.2973], // Coordenadas centradas
+                flag: "https://flagcdn.com/w40/co.png",
+                clients: [
+                    { name: "SimRacing Colombia", type: "Distribuidor Oficial", location: "Bogotá" },
+                    { name: "Gaming Center CO", type: "Tienda Especializada", location: "Medellín" },
+                    { name: "Digital Sports CO", type: "Centro de Simulación", location: "Cali" },
+                    { name: "Tech Games Colombia", type: "E-commerce", location: "Barranquilla" }
+                ]
+            }
+        };
+
+        // Emojis para cada país
+        const countryEmojis = {
+            "peru": "🇵🇪",
+            "paraguay": "🇵🇾",
+            "uruguay": "🇺🇾",
+            "argentina": "🇦🇷",
+            "chile": "🇨🇱",
+            "brasil": "🇧🇷",
+            "bolivia": "🇧🇴",
+            "costarica": "🇨🇷",
+            "colombia": "🇨🇴"
+        };
+
+        // Inicializar mapa
+        let map;
+        let markers = {};
+        let activeMarker = null;
+
+        function initMap() {
+            // Crear mapa centrado en América Latina
+            map = L.map('coverageMap').setView([-15, -60], 4);
+            
+            // Añadir capa de OpenStreetMap
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 8,
+                minZoom: 3
+            }).addTo(map);
+
+            // Crear icono personalizado similar a Google Maps
+            const customIcon = L.divIcon({
+                className: 'custom-marker',
+                html: `
+                    <div style="
+                        width: 30px;
+                        height: 30px;
+                        background: ${getMarkerColor()};
+                        border: 3px solid white;
+                        border-radius: 50% 50% 50% 0;
+                        transform: rotate(-45deg);
+                        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+                        position: relative;
+                    ">
+                        <div style="
+                            position: absolute;
+                            width: 18px;
+                            height: 18px;
+                            background: white;
+                            border-radius: 50%;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%) rotate(45deg);
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 10px;
+                            font-weight: bold;
+                            color: ${getMarkerColor()};
+                        "></div>
+                    </div>
+                `,
+                iconSize: [30, 30],
+                iconAnchor: [15, 30]
+            });
+
+            // Añadir marcadores para cada país
+            Object.entries(countriesData).forEach(([id, country]) => {
+                const marker = L.marker(country.coordinates, {
+                    icon: customIcon,
+                    title: country.name
+                }).addTo(map);
+                
+                marker.on('click', () => {
+                    selectCountry(id);
+                });
+                
+                markers[id] = marker;
+            });
+
+            // Cargar lista de países
+            loadCountriesList();
+        }
+
+        function getMarkerColor(isActive = false) {
+            return isActive ? '#D5006D' : '#017B80';
+        }
+
+        function selectCountry(countryId) {
+            const country = countriesData[countryId];
+            
+            if (!country) return;
+            
+            // Actualizar UI
+            document.getElementById('selectedCountry').textContent = country.name;
+            
+            // Mostrar bandera
+            const flagImg = document.getElementById('countryFlag');
+            flagImg.src = country.flag;
+            flagImg.alt = `Bandera de ${country.name}`;
+            flagImg.style.display = 'block';
+            
+            // Actualizar lista de clientes
+            const clientsList = document.getElementById('clientsList');
+            clientsList.innerHTML = '';
+            
+            if (country.clients.length === 0) {
+                clientsList.innerHTML = `
+                    <div class="no-selection">
+                        <i class="fas fa-store-slash"></i>
+                        <p>Próximamente en ${country.name}</p>
+                    </div>
+                `;
+            } else {
+                country.clients.forEach(client => {
+                    const clientCard = document.createElement('div');
+                    clientCard.className = 'client-card';
+                    clientCard.innerHTML = `
+                        <div class="client-name">${client.name}</div>
+                        <div class="client-type">${client.type}</div>
+                        <div class="client-location">📍 ${client.location}</div>
+                    `;
+                    clientsList.appendChild(clientCard);
+                });
+            }
+            
+            // Resaltar país en la lista
+            document.querySelectorAll('.country-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.country === countryId) {
+                    item.classList.add('active');
+                }
+            });
+            
+            // Mover mapa al país seleccionado
+            map.setView(country.coordinates, 5);
+            
+            // Resaltar marcador (simulado cambiando el z-index)
+            if (activeMarker) {
+                // Podríamos cambiar el icono del marcador anterior
+            }
+            
+            // Aquí podrías cambiar el icono del marcador activo si quieres
+            activeMarker = countryId;
+        }
+
+        function loadCountriesList() {
+            const countriesList = document.getElementById('countriesList');
+            countriesList.innerHTML = '';
+            
+            // Ordenar los países en el mismo orden que la imagen
+            const countryOrder = ["peru", "paraguay", "uruguay", "argentina", "chile", "brasil", "bolivia", "costarica", "colombia"];
+            
+            countryOrder.forEach(id => {
+                const country = countriesData[id];
+                if (!country) return;
+                
+                const countryItem = document.createElement('div');
+                countryItem.className = 'country-item';
+                countryItem.dataset.country = id;
+                countryItem.innerHTML = `
+                    <div class="country-emoji">${countryEmojis[id] || '🌎'}</div>
+                    <h4>${country.name}</h4>
+                    <div class="client-count">${country.clients.length} socios</div>
+                `;
+                
+                countryItem.addEventListener('click', () => {
+                    selectCountry(id);
+                });
+                
+                countriesList.appendChild(countryItem);
+            });
+        }
+
+        // Inicializar cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', () => {
+            initMap();
+            
+            // Seleccionar Chile por defecto
+            setTimeout(() => {
+                selectCountry('chile');
+            }, 500);
+        });
+    </script>
+</body>
+</html>

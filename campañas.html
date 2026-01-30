@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Campañas · Global Horizon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* ================== RESET & VARIABLES ================== */
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --green:#017B80;       /* Primario */
+      --black:#000000;       /* Texto */
+      --fuchsia:#D5006D;     /* Acento */
+      --gray-100:#F2F2F2;    /* Fondo claro */
+      --white:#FFFFFF;
+
+      --border:#E6E6E6;
+      --text:#000000;
+      --text-muted:#474747;
+      --card-shadow:0 2px 10px rgba(0,0,0,.05);
+      --soft-radius:10px;
+    }
+
+    body{
+      font-family:'Montserrat',sans-serif;
+      color:var(--text);
+      background:linear-gradient(180deg, var(--gray-100) 0%, #FFFFFF 100%);
+      line-height:1.6;
+      overflow-x:hidden;
+    }
+
+    .container{max-width:1200px;margin:0 auto;padding:0 1rem}
+    .section{padding:64px 0}
+    .section-header{text-align:center;margin-bottom:28px}
+    .section-header h2{
+      font-size:2rem;letter-spacing:2px;font-weight:900;text-transform:uppercase;color:var(--green)
+    }
+    .section-header p{color:var(--text-muted);font-weight:500}
+
+    /* ================== HEADER ================== */
+    header{
+      position:sticky;top:0;z-index:20;
+      background:rgba(255,255,255,.9);
+      backdrop-filter:saturate(140%) blur(10px);
+      border-bottom:1px solid var(--border);
+    }
+    .topbar{display:flex;align-items:center;justify-content:space-between;padding:.5rem 1rem}
+    .logo{display:flex;align-items:center;gap:.75rem}
+    .logo-img{height:64px;width:auto;object-fit:contain;display:block}
+
+    nav{display:flex;gap:.25rem;align-items:center;flex-wrap:wrap}
+    nav > a{
+      color:var(--black);text-decoration:none;font-size:.85rem;font-weight:800;
+      padding:.55rem .9rem;border-radius:8px;letter-spacing:.5px;text-transform:uppercase;
+      border:1px solid transparent;transition:.2s;
+    }
+    nav > a:hover{
+      color:var(--green);border-color:var(--green);background:rgba(1,123,128,.08);
+    }
+    nav > a.active{
+      color:#fff;background:var(--green);border-color:var(--green);
+    }
+
+    .spacer{height:8px}
+
+    /* ================== HERO ENCABEZADO ================== */
+    .hero{
+      position: relative;   /* necesario para las líneas */
+      overflow: hidden;     /* ocultar desbordes de las líneas */
+      background:
+        radial-gradient(600px 300px at 15% 20%, rgba(1,123,128,.10) 0%, transparent 70%),
+        radial-gradient(600px 300px at 85% 80%, rgba(213,0,109,.10) 0%, transparent 70%),
+        #fff;
+    }
+    .hero .lead{
+      text-align:center;
+      max-width:900px;margin:0 auto;
+      position:relative; z-index:1; /* por encima de las líneas */
+    }
+    .hero .lead h1{
+      font-size:2.2rem;font-weight:900;text-transform:uppercase;letter-spacing:2px;color:var(--green);
+    }
+    .hero .lead p{
+      color:#303030;margin-top:.35rem;
+    }
+
+    /* ===== Líneas animadas de marca en el HERO ===== */
+    .hero-lines{
+      position:absolute; inset:0;
+      pointer-events:none; z-index:0; /* detrás del texto */
+    }
+    .hero-lines .line{
+      position:absolute; height:3px; border-radius:2px; opacity:.85;
+      filter: drop-shadow(0 0 6px rgba(0,0,0,.08));
+      animation: sweep 7.5s linear infinite;
+      will-change: transform, opacity;
+    }
+    .hero-lines .line.teal{
+      background: linear-gradient(90deg, transparent, var(--green), rgba(1,123,128,.85), var(--green), transparent);
+    }
+    .hero-lines .line.fuchsia{
+      background: linear-gradient(90deg, transparent, var(--fuchsia), rgba(213,0,109,.85), var(--fuchsia), transparent);
+    }
+    /* Posiciones pensadas para enmarcar el título/subtítulo del hero */
+    .hero-lines .l1{ top:28%; left:-28vw; width:36vw; animation-delay:0s;   transform:rotate(-1.5deg); }
+    .hero-lines .l2{ top:46%; left:-32vw; width:30vw; animation-delay:1.2s; transform:rotate(-1.5deg); }
+    .hero-lines .l3{ top:64%; left:-24vw; width:26vw; animation-delay:2.4s; transform:rotate(-1.5deg); opacity:.75; }
+    .hero-lines .l4{ top:76%; left:-26vw; width:22vw; animation-delay:3.6s; transform:rotate(-1.5deg); opacity:.75; }
+
+    @keyframes sweep{
+      0%   { transform: translateX(0) rotate(-1.5deg);   opacity:0; }
+      8%   { opacity:.85; }
+      85%  { opacity:.85; }
+      100% { transform: translateX(140vw) rotate(-1.5deg); opacity:0; }
+    }
+    @media (prefers-reduced-motion: reduce){
+      .hero-lines .line{ animation-duration:12s; opacity:.6; }
+    }
+
+    /* ================== MARCAS TABS ================== */
+    .brands-tabs-container {
+      max-width: 1100px;
+      margin: 2rem auto 3rem;
+    }
+    
+    .brands-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+    
+    .brand-tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: .45rem;
+      min-height: 96px;
+      padding: .9rem 1rem;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #fff;
+      box-shadow: var(--card-shadow);
+      cursor: pointer;
+      user-select: none;
+      transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease, background .25s ease;
+    }
+    
+    .brand-tab:hover {
+      border-color: var(--green);
+      transform: translateY(-2px);
+    }
+    
+    .brand-tab.active {
+      border-color: var(--fuchsia);
+      outline: 2px solid rgba(213,0,109,.15);
+      background: rgba(213,0,109,.03);
+    }
+    
+    .brand-tab img {
+      display: block;
+      height: 28px;
+      width: auto;
+      max-width: 120px;
+      object-fit: contain;
+      transition: transform .25s ease;
+    }
+    
+    .brand-tab:hover img,
+    .brand-tab.active img {
+      transform: scale(1.02);
+    }
+    
+    .brand-tab span {
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--black);
+      opacity: .95;
+      text-transform: uppercase;
+    }
+    
+    .brand-tab small {
+      font-weight: 800;
+      opacity: .8;
+      color: var(--fuchsia);
+    }
+
+    /* ================== SECCIONES DE CAMPAÑAS POR MARCA ================== */
+    .brand-campaigns-section {
+      display: none;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .brand-campaigns-section.active {
+      display: block;
+      animation: fade .35s ease;
+    }
+    
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .brand-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+    
+    .brand-header img {
+      height: 40px;
+      width: auto;
+      max-width: 200px;
+      object-fit: contain;
+    }
+    
+    .brand-header h2 {
+      font-size: 1.8rem;
+      color: var(--green);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ================== CAMPAÑAS ACTIVAS ================== */
+    .campaigns-active {
+      margin-bottom: 4rem;
+    }
+    
+    .campaigns-active h3 {
+      font-size: 1.4rem;
+      color: var(--fuchsia);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 1.5rem;
+      padding-bottom: .5rem;
+      border-bottom: 2px solid rgba(213,0,109,.2);
+    }
+    
+    .campaigns-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .campaign-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--soft-radius);
+      box-shadow: var(--card-shadow);
+      overflow: hidden;
+      transition: transform .3s ease;
+    }
+    
+    .campaign-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .campaign-media {
+      height: 200px;
+      background: #fafafa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .campaign-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background-color: #f8f9fa;
+      transition: transform .5s ease;
+    }
+    
+    .campaign-card:hover .campaign-media img {
+      transform: scale(1.05);
+    }
+    
+    .campaign-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: var(--fuchsia);
+      color: #fff;
+      font-size: .7rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      padding: .35rem .7rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+      z-index: 2;
+    }
+    
+    .campaign-body {
+      padding: 1.5rem;
+    }
+    
+    .campaign-title {
+      font-size: 1.2rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: .5rem;
+      line-height: 1.3;
+    }
+    
+    .campaign-desc {
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      line-height: 1.6;
+      max-height: 120px;
+      overflow-y: auto;
+    }
+    
+    .campaign-details {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    
+    .campaign-date {
+      color: var(--green);
+      font-weight: 900;
+      letter-spacing: .5px;
+      font-size: .85rem;
+    }
+    
+    .campaign-status {
+      background: rgba(213,0,109,.1);
+      color: var(--fuchsia);
+      padding: .3rem .7rem;
+      border-radius: 999px;
+      font-size: .75rem;
+      font-weight: 900;
+      letter-spacing: .5px;
+    }
+
+    /* ================== CAMPAÑAS PRÓXIMAMENTE ================== */
+    .campaigns-upcoming h3 {
+      font-size: 1.4rem;
+      color: var(--green);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 1.5rem;
+      padding-bottom: .5rem;
+      border-bottom: 2px solid rgba(1,123,128,.2);
+    }
+    
+    .upcoming-badge {
+      background: rgba(1,123,128,.1);
+      color: var(--green);
+    }
+
+    /* ================== FOOTER ================== */
+    footer{
+      border-top:1px solid var(--border);
+      background:#fff;
+      color:#313131;
+      margin-top: 4rem;
+    }
+    
+    footer .container{
+      padding:22px 1rem;
+    }
+    
+    footer a{
+      color:var(--green);
+      text-decoration:none;
+      font-weight: 600;
+    }
+    
+    footer a:hover{
+      color:var(--fuchsia);
+    }
+
+    /* ================== RESPONSIVE ================== */
+    @media (max-width:1024px){
+      .brands-tabs {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .campaigns-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      }
+    }
+    
+    @media (max-width:768px){
+      .hero .lead h1 {
+        font-size: 1.8rem;
+      }
+      
+      .brand-header {
+        flex-direction: column;
+        text-align: center;
+        gap: .5rem;
+      }
+      
+      .brand-header h2 {
+        font-size: 1.5rem;
+      }
+      
+      .brands-tabs {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @media (max-width:640px){
+      .section {
+        padding: 48px 0;
+      }
+      
+      .campaigns-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .campaign-details {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: .5rem;
+      }
+    }
+    /* Añade esto en tu CSS */
+#moza .brand-header img {
+  background-color: transparent !important;
+  border: none !important;
+  min-height: 40px;
+}
+
+/* O prueba con un color de fondo temporal para debug */
+#moza .brand-header img {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 5px;
+}
+  </style>
+</head>
+
+<body>
+  <!-- ===== HEADER ===== -->
+  <header>
+    <div class="topbar container">
+      <div class="logo" aria-label="Global Horizon">
+        <img
+          class="logo-img"
+          src="../public/imagenes/logo-GH.png"
+          alt="Global Horizon Logo"
+          onerror="this.style.outline='1px dashed #f55'; this.alt='(logo no encontrado)';"
+        />
+      </div>
+      <nav>
+        <a href="../public/index.html">Inicio</a>
+        <a href="../public/nosotros.html">Nosotros</a>
+        <a href="../public/marcas.html">Marcas</a>
+        <a href="../public/productos.html">Productos</a>
+        <a href="../public/campañas.html">Campañas</a>       
+        <a href="../public/cobertura.html">Cobertura</a>
+        <a href="../public/index.html#contacto">Contacto</a>
+      </nav>
+    </div>
+  </header>
+  <div class="spacer"></div>
+
+  <!-- ===== HERO / ENCABEZADO ===== -->
+  <section class="hero section">
+    <!-- Líneas de marca en el hero -->
+    <div class="hero-lines" aria-hidden="true">
+      <span class="line teal l1"></span>
+      <span class="line fuchsia l2"></span>
+      <span class="line teal l3"></span>
+      <span class="line fuchsia l4"></span>
+    </div>
+
+    <div class="container">
+      <div class="lead">
+        <h1>Campañas por Marca</h1>
+        <p>Promociones activas y próximas para cada una de nuestras marcas</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== MARCAS TABS ===== -->
+  <div class="brands-tabs-container container">
+    <div class="brands-tabs" role="tablist" aria-label="Seleccionar marca">
+      <button class="brand-tab active" data-target="playseat" role="tab" aria-selected="true">
+        <img src="../public/imagenes/playseat.png" alt="Playseat logo"/>
+        <span>Playseat</span>
+      </button>
+      <button class="brand-tab" data-target="moza" role="tab" aria-selected="false">
+        <img src="../public/imagenes/MOZA LOGO3.jpg" alt="MOZA Racing logo"/>
+        <span>MOZA Racing</span>
+      </button>
+      <button class="brand-tab" data-target="thrustmaster" role="tab" aria-selected="false">
+        <img src="../public/imagenes/ThrustmasterBlack.png" alt="Thrustmaster logo"/>
+        <span>Thrustmaster</span>
+      </button>
+      <button class="brand-tab" data-target="dbox" role="tab" aria-selected="false">
+        <img src="../public/imagenes/dbox.png" alt="D-BOX logo"/>
+        <span>D‑BOX <small>(Nueva)</small></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== CAMPAÑAS PLAYSEAT ===== -->
+  <section id="playseat" class="brand-campaigns-section active" aria-label="Campañas Playseat">
+    <div class="container">
+      <div class="brand-header">
+        <img src="../public/imagenes/playseat.png" alt="Playseat"/>
+        <h2>Campañas Playseat</h2>
+      </div>
+
+      <!-- Campañas Activas -->
+      <div class="campaigns-active">
+        <h3><i class="fas fa-bullhorn"></i> Campañas Activas</h3>
+        <div class="campaigns-grid">
+          <!-- Campaña 1 -->
+          <article class="campaign-card">
+            <div class="campaign-media">
+              <span class="campaign-badge">Activa</span>
+              <img src="imagenes/1-Playseat Seatslider - With Playseat Evolution short.jpg" alt="Playseat Seatslider" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23f0f0f0%22/><text x=%2250%25%22 y=%2250%25%22 font-family=%22Montserrat%22 font-size=%2216%22 fill=%22%23017B80%22 text-anchor=%22middle%22>PLAYSEAT SEATSLIDER</text></svg>';">
+            </div>
+            <div class="campaign-body">
+              <h3 class="campaign-title">Lanzamiento Playseat Seatslider</h3>
+              <p class="campaign-desc">
+                Sistema de ajuste longitudinal de precisión para posicionamiento ergonómico. 
+                Permite deslizar el asiento hacia adelante o atrás con suavidad y seguridad, 
+                adaptándose a diferentes estaturas y preferencias de conducción. Instalación rápida sin herramientas, compatible con rigs Playseat. 
+                Ideal para sesiones largas de simulación donde el confort y la posición correcta son esenciales.
+              </p>
+              <div class="campaign-details">
+                <div class="campaign-date">Válido hasta: 28 Febrero 2026</div>
+                <span class="campaign-status">Activa</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Campaña 2 -->
+          <article class="campaign-card">
+            <div class="campaign-media">
+              <span class="campaign-badge">Activa</span>
+              <img src="imagenes/Playseat_Formula_Instinct_Behind_Desk.jpg" alt="Playseat Formula Instinct" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23f0f0f0%22/><text x=%2250%25%22 y=%2250%25%22 font-family=%22Montserrat%22 font-size=%2216%22 fill=%22%23017B80%22 text-anchor=%22middle%22>PLAYSEAT FORMULA INSTINCT</text></svg>';">
+            </div>
+            <div class="campaign-body">
+              <h3 class="campaign-title">Playseat Formula Instinct</h3>
+              <p class="campaign-desc">
+                Rig de simulación en posición de F1 moderno, diseñado para ofrecer la postura aerodinámica 
+                y envolvente de un monoplaza de competición. 
+                Estructura de acero tubular de alta resistencia con ajustes de pedales y volante integrados. 
+                Incluye soporte para sistemas Direct Drive y base ajustable de aluminio.
+              </p>
+              <div class="campaign-details">
+                <div class="campaign-date">Válido hasta: 15 Marzo 2026</div>
+                <span class="campaign-status">Activa</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- Campañas Próximamente -->
+      <div class="campaigns-upcoming">
+        <h3><i class="fas fa-calendar-alt"></i> Próximamente</h3>
+        <div class="campaigns-grid">
+          <!-- Próxima 1 -->
+          <article class="campaign-card">
+            <div class="campaign-media">
+              <span class="campaign-badge upcoming-badge">Próximo</span>
+              <img src="imagenes/1-Playseat Challenge X Logitech G - Product view front-side.jpg" alt="Playseat Challenge X Logitech" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23f0f0f0%22/><text x=%2250%25%22 y=%2250%25%22 font-family=%22Montserrat%22 font-size=%2216%22 fill=%22%23017B80%22 text-anchor=%22middle%22>PLAYSEAT CHALLENGE X LOGITECH</text></svg>';">
+            </div>
+            <div class="campaign-body">
+              <h3 class="campaign-title">Playseat Challenge X Logitech</h3>
+              <p class="campaign-desc">
+                Rig de simulación plegable diseñado en colaboración con Logitech, que combina la portabilidad del Challenge 
+                con optimización específica para los volantes de la serie G de Logitech.
+                Estructura tubular de acero con sistema de plegado rápido y almacenamiento compacto.
+              </p>
+              <div class="campaign-details">
+                <div class="campaign-date">Inicia: Abril 2026</div>
+                <span class="campaign-status upcoming-badge">Próximo</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CAMPAÑAS MOZA RACING ===== -->
+  <section id="moza" class="brand-campaigns-section" aria-label="Campañas MOZA Racing">
+    <div class="container">
+      <div class="brand-header">
+        <img src="../public/imagenes/moza.png" alt="MOZA Racing"/>
+        <h2>Campañas MOZA Racing</h2>
+      </div>
+
+      <!-- Campañas Activas -->
+      <div class="campaigns-active">
+        <h3><i class="fas fa-bullhorn"></i> Campañas Activas</h3>
+        <div class="campaigns-grid">
+          <!-- Campaña 1 -->
+          <article class="campaign-card">
+            <div class="campaign-media">
+              <span class="campaign-badge">Activa</span>
+              <img src="imagenes/R12-V2-KS.webp" alt="MOZA GS V2 Bundle" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23f0f0f0%22/><text x=%2250%25%22 y=%2250%25%22 font-family=%22Montserrat%22 font-size=%2216%22 fill=%22%23017B80%22 text-anchor=%22middle%22>MOZA GS V2 BUNDLE</text></svg>';">
+            </div>
+            <div class="campaign-body">
+              <h3 class="campaign-title">MOZA Racing GS V2 Bundle</h3>
+              <p class="campaign-desc">
+                Paquete premium que incluye el volante GS V2 y el innovador ratón magnético MOZA, diseñado para simulación de carreras de alto rendimiento.
+                Combinación perfecta entre precisión de volante y accesibilidad de controles auxiliares.
+              </p>
+              <div class="campaign-details">
+                <div class="campaign-date">Válido hasta: 30 Marzo 2026</div>
+                <span class="campaign-status">Activa</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Campaña 2 -->
+          <article class="campaign-card">
+            <div class="campaign-media">
+              <span class="campaign-badge">Activa</span>
+              <img src="imagenes/R12-V2-VGS.webp" alt="MOZA GS V2 Volante" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23f0f0f0%22/><text x=%2250%25%22 y=%2250%25%22 font-family=%22Montserrat%22 font-size=%2216%22 fill=%22%23017B80%22 text-anchor=%22middle%22>MOZA GS V2 VOLANTE</text></svg>';">
+            </div>
+            <div class="campaign-body">
+              <h3 class="campaign-title">MOZA Racing GS V2 Volante</h3>
+              <p class="campaign-desc">
+                Volante de simulación de 265mm diseñado específicamente para carreras de fórmula y GT. Con giro ajustable de 47.5° por lado (95° total), 
+                incluye 6 botones programables y paletas de cambio magnéticas de alta respuesta.
+              </p>
+              <div class="campaign-details">
+                <div class="campaign-date">Válido hasta: 20 Abril 2026</div>
+                <span class="campaign-status">Activa</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- Campañas Próximamente -->
+      <div class="campaigns-upcoming">
+        <h3><i class="fas fa-calendar-alt"></i> Próximamente</h3>
+        <div class="campaigns-grid">
+          <!-- Próxima 1 -->
+          <article class="campaign-card">
+            <div class="campaign-media">
+              <span class="campaign-badge upcoming-badge">Próximo</span>
+              <img src="imagenes/R9-V3-CS.webp" alt="MOZA Magnetic Mouse" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23f0f0f0%22/><text x=%2250%25%22 y=%2250%25%22 font-family=%22Montserrat%22 font-size=%2216%22 fill=%22%23017B80%22 text-anchor=%22middle%22>MOZA MAGNETIC MOUSE</text></svg>';">
+            </div>
+            <div class="campaign-body">
+              <h3 class="campaign-title">MOZA Magnetic Mouse</h3>
+              <p class="campaign-desc">
+                Sistema de ratón magnético que se acopla al volante MOZA GS V2, permitiendo controlar menús y funciones del juego sin soltar el volante. 
+                Diseño ergonómico con imanes de neodimio para sujeción segura.
+              </p>
+              <div class="campaign-details">
+                <div class="campaign-date">Inicia: Mayo 2026</div>
+                <span class="campaign-status upcoming-badge">Próximo</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CAMPAÑAS THRUSTMASTER ===== -->
+  <section id="thrustmaster" class="brand-campaigns-section" aria-label="Campañas Thrustmaster">
+    <div class="container">
+      <div class="brand-header">
+        <img src="../public/imagenes/ThrustmasterBlack.png" alt="Thrustmaster"/>
+        <h2>Campañas Thrustmaster</h2>
+      </div>
+
+      <!-- Campañas Activas -->
+      <div class="campaigns-active">
+        <h3><i class="fas fa-bullhorn"></i> Campañas Activas</h3>
+        <div class="campaigns-grid">
+          <!-- Campaña 1 -->
+          <article class="campaign-card">
+            <div class="campaign-media">
+              <span class="campaign-badge">Activa</span>
+              <img src="imagenes/Y300cpx-product.jpg" alt="Thrustmaster T-LCM" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23f0f0f0%22/><text x=%2250%25%22 y=%2250%25%22 font-family=%22Montserrat%22 font-size=%2216%22 fill=%22%23017B80%22 text-anchor=%22middle%22>THRUSTMASTER T-LCM</text></svg>';">
+            </div>
+            <div class="campaign-body">
+              <h3 class="campaign-title">Thrustmaster T-LCM</h3>
+              <p class="campaign-desc">
+                Pedalera profesional de simracing con tecnología 
+                Load Cell en el pedal de freno, diseñada para ofrecer precisión y realismo de nivel competitivo. Sistema de célula de carga que mide
+                la presión aplicada en lugar del desplazamiento,
+                 replicando la sensación de frenos reales de competición
+              </p>
+              <div class="campaign-details">
+                <div class="campaign-date">Válido hasta: 15 Abril 2026</div>
+                <span class="campaign-status">Activa</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Campaña 2 -->
+          <article class="campaign-card">
+            <div class="campaign-media">
+              <span class="campaign-badge">Activa</span>
+              <img src="imagenes/TflightHotas4_ecosystem_1000x1000.jpg" alt="Thrustmaster HOTAS 4 Ecosystem" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22><rect width=%22100%25% height=%22100%25%22 fill=%22%23f0f0f0%22/><text x=%2250%25%22 y=%2250%25%22 font-family=%22Montserrat%22 font-size=%2216%22 fill=%22%23017B80%22 text-anchor=%22middle%22>THRUSTMASTER HOTAS 4 ECOSYSTEM</text></svg>';">
+            </div>
+            <div class="campaign-body">
+              <h3 class="campaign-title">Thrustmaster T.Flight HOTAS 4 Ecosystem</h3>
+              <p class="campaign-desc">
+                Sistema completo de simulación de vuelo diseñado para crecimiento modular, que permite comenzar con el joystick HOTAS 4 e ir incorporando componentes del ecosistema Thrustmaster 
+                para una experiencia de vuelo cada vez más realista y profesional.
+              </p>
+              <div class="campaign-details">
+                <div class="campaign-date">Válido hasta: 30 Mayo 2026</div>
+                <span class="campaign-status">Activa</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- Campañas Próximamente -->
+      <div class="campaigns-upcoming">
+        <h3><i class="fas fa-calendar-alt"></i> Próximamente</h3>
+        <div class="campaigns-grid">
+          <!-- Próxima 1 -->
+          <article class="campaign-card">
+            <div class="campaign-media">
+              <span class="campaign-badge upcoming-badge">Próximo</span>
+              <img src="imagenes/SilverPack_1000x1000_2.jpg" alt="Thrustmaster HOTAS One Ecosystem" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23f0f0f0%22/><text x=%2250%25%22 y=%2250%25%22 font-family=%22Montserrat%22 font-size=%2216%22 fill=%22%23017B80%22 text-anchor=%22middle%22>THRUSTMASTER HOTAS ONE ECOSYSTEM</text></svg>';">
+            </div>
+            <div class="campaign-body">
+              <h3 class="campaign-title">Thrustmaster T.Flight HOTAS One Ecosystem</h3>
+              <p class="campaign-desc">
+                Sistema modular de simulación de vuelo multiplataforma que combina el joystick HOTAS One con opciones de personalización mediante botones SHARE y OPTIONS, diseñado específicamente para Xbox 
+                y PC con crecimiento hacia el ecosistema completo.
+              </p>
+              <div class="campaign-details">
+                <div class="campaign-date">Inicia: Junio 2026</div>
+                <span class="campaign-status upcoming-badge">Próximo</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CAMPAÑAS D-BOX ===== -->
+  <section id="dbox" class="brand-campaigns-section" aria-label="Campañas D-BOX">
+    <div class="container">
+      <div class="brand-header">
+        <img src="../public/imagenes/dbox.png" alt="D-BOX"/>
+        <h2>Campañas D‑BOX</h2>
+      </div>
+
+      <!-- Campañas Activas -->
+      <div class="campaigns-active">
+        <h3><i class="fas fa-bullhorn"></i> Campañas Activas</h3>
+        <div class="campaigns-grid">
+          <!-- Campaña 1 -->
+          <article class="campaign-card">
+            <div class="campaign-media">
+              <span class="campaign-badge">Activa</span>
+              <img src="imagenes/DBOX_Haptic_System.jpg" alt="D-BOX Haptic System" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23f0f0f0%22/><text x=%2250%25%22 y=%2250%25%22 font-family=%22Montserrat%22 font-size=%2216%22 fill=%22%23017B80%22 text-anchor=%22middle%22>D-BOX HAPTIC SYSTEM</text></svg>';">
+            </div>
+            <div class="campaign-body">
+              <h3 class="campaign-title">D-BOX Haptic System Launch</h3>
+              <p class="campaign-desc">
+                Presentación oficial de los sistemas hápticos D‑BOX en LATAM.
+                Tecnología de movimiento profesional para simuladores de alta gama.
+              </p>
+              <div class="campaign-details">
+                <div class="campaign-date">Válido hasta: 31 Diciembre 2026</div>
+                <span class="campaign-status">Activa</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- Campañas Próximamente -->
+      <div class="campaigns-upcoming">
+        <h3><i class="fas fa-calendar-alt"></i> Próximamente</h3>
+        <div class="campaigns-grid">
+          <!-- Próxima 1 -->
+          <article class="campaign-card">
+            <div class="campaign-media">
+              <span class="campaign-badge upcoming-badge">Próximo</span>
+              <img src="imagenes/DBOX_Racing_Integration.jpg" alt="D-BOX Racing Integration" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23f0f0f0%22/><text x=%2250%25%22 y=%2250%25%22 font-family=%22Montserrat%22 font-size=%2216%22 fill=%22%23017B80%22 text-anchor=%22middle%22>D-BOX RACING INTEGRATION</text></svg>';">
+            </div>
+            <div class="campaign-body">
+              <h3 class="campaign-title">D-BOX Pro Racing Integration</h3>
+              <p class="campaign-desc">
+                Sistemas D‑BOX optimizados específicamente para rigs de simracing.
+                Compatibilidad garantizada con Playseat, MOZA y Thrustmaster.
+              </p>
+              <div class="campaign-details">
+                <div class="campaign-date">Inicia: Julio 2026</div>
+                <span class="campaign-status upcoming-badge">Próximo</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Próxima 2 -->
+          <article class="campaign-card">
+            <div class="campaign-media">
+              <span class="campaign-badge upcoming-badge">Próximo</span>
+              <img src="imagenes/DBOX_Control_Units.jpg" alt="D-BOX Control Units" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23f0f0f0%22/><text x=%2250%25%22 y=%2250%25%22 font-family=%22Montserrat%22 font-size=%2216%22 fill=%22%23017B80%22 text-anchor=%22middle%22>D-BOX CONTROL UNITS</text></svg>';">
+            </div>
+            <div class="campaign-body">
+              <h3 class="campaign-title">D-BOX Advanced Control Units</h3>
+              <p class="campaign-desc">
+                Nueva generación de unidades de control D‑BOX con software mejorado.
+                Interfaz más intuitiva y compatibilidad ampliada.
+              </p>
+              <div class="campaign-details">
+                <div class="campaign-date">Inicia: Agosto 2026</div>
+                <span class="campaign-status upcoming-badge">Próximo</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="container">
+      <p style="font-weight:600">
+        © 2026 Global Horizon SpA. Todos los derechos reservados.
+        &nbsp;·&nbsp;
+        <a href="mailto:info@globalhorizon.cl">info@globalhorizon.cl</a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- ================== SCRIPTS ================== -->
+  <script>
+    // Tabs de marca
+    const tabs = document.querySelectorAll('.brand-tab');
+    const sections = document.querySelectorAll('.brand-campaigns-section');
+
+    function activate(targetId){
+      // Actualizar tabs
+      tabs.forEach(t=>{
+        const active = (t.dataset.target === targetId);
+        t.classList.toggle('active', active);
+        t.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+      
+      // Mostrar sección correspondiente
+      sections.forEach(s=> s.classList.toggle('active', s.id === targetId));
+      
+      // Actualizar URL sin recargar
+      history.replaceState(null, '', '#' + targetId);
+      
+      // Scroll suave a la sección activa
+      document.getElementById(targetId).scrollIntoView({behavior: 'smooth', block: 'start'});
+    }
+
+    // Event listeners para tabs
+    tabs.forEach(tab=> {
+      tab.addEventListener('click', ()=> activate(tab.dataset.target));
+    });
+
+    // Activar hash si viene en la URL
+    window.addEventListener('DOMContentLoaded', ()=>{
+      const hash = location.hash.replace('#','');
+      if(hash && document.getElementById(hash)){ 
+        activate(hash); 
+      } else {
+        // Por defecto activar Playseat
+        activate('playseat');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Marcas | Global Horizon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root{
+      /* Paleta corporativa */
+      --teal:#017B80; 
+      --magenta:#D5006D; 
+      --black:#000; 
+      --white:#fff; 
+      --gray:#888; 
+      --light:#F2F2F2;
+
+      /* Derivados para tema claro */
+      --text:#000000;
+      --text-muted:#4a4a4a;
+      --border:#E6E6E6;
+      --card-bg:#FFFFFF;
+      --surface:#FAFAFA;
+      --soft-shadow:0 2px 10px rgba(0,0,0,.06);
+      --radius:12px;
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{height:100%}
+
+    /* ====== TEMA CLARO (solo estilo) ====== */
+    body{
+      font-family:'Montserrat',sans-serif;
+      background:linear-gradient(180deg, var(--light) 0%, #FFFFFF 100%);
+      color:var(--text);
+      line-height:1.6;
+    }
+
+    /* ===== Header (claro y pegajoso) ===== */
+    header{
+      position:sticky;top:0;z-index:50;
+      background:rgba(255,255,255,.92);
+      backdrop-filter:saturate(140%) blur(10px);
+      border-bottom:1px solid var(--border);
+      padding:.5rem 1rem;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:none; /* sin glow */
+    }
+    
+    .logo{display:flex;align-items:center;gap:.75rem}
+    .logo-img{height:64px;width:auto;object-fit:contain;display:block}
+    
+    nav{display:flex;gap:.25rem;align-items:center;flex-wrap:wrap}
+    nav a{
+      color:var(--black);text-decoration:none;font-size:.85rem;font-weight:800;
+      padding:.55rem .9rem;border-radius:8px;letter-spacing:.5px;text-transform:uppercase;
+      border:1px solid transparent;transition:.2s;
+    }
+    nav a:hover{
+      color:var(--teal);border-color:var(--teal);background:rgba(1,123,128,.08);
+    }
+    nav a.active{
+      color:#fff;background:var(--teal);border-color:var(--teal);
+    }
+
+    /* ===== Título ===== */
+    main{padding:3rem 2rem 4rem; max-width:1200px; margin:0 auto}
+    .page-title{text-align:center;margin-bottom:2rem}
+    .page-title h1{
+      font-size:2.5rem;text-transform:uppercase;letter-spacing:4px;color:var(--teal);
+      font-weight:900; margin-bottom:.5rem;
+    }
+    .page-title p{color:var(--text-muted); font-size:1.1rem;}
+
+    /* ===== Brand Tabs ===== */
+    .brand-tabs{
+      margin:1.75rem auto 2.5rem;
+      display:grid;
+      grid-template-columns:repeat(4, minmax(180px, 1fr));
+      gap:1rem;
+      max-width:1100px;
+    }
+    .brand-tab{
+      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.45rem;
+      min-height:96px;padding:.9rem 1rem;border-radius:12px;
+      border:1px solid var(--border);
+      background: var(--card-bg);
+      box-shadow: var(--soft-shadow);
+      cursor:pointer;user-select:none;
+      transition:border-color .25s ease, box-shadow .25s ease, transform .25s ease, background .25s ease;
+    }
+    .brand-tab:hover{border-color:var(--teal);transform:translateY(-2px)}
+    .brand-tab.active{border-color:var(--magenta);outline:2px solid rgba(213,0,109,.15)}
+    .brand-tab img{
+      display:block;height:28px;width:auto;object-fit:contain;
+      filter:none;opacity:1;
+      transition:transform .25s ease;
+    }
+    .brand-tab:hover img,.brand-tab.active img{transform:scale(1.02)}
+    .brand-tab span{font-size:.8rem;font-weight:700;letter-spacing:1px;color:var(--black);opacity:.95;text-transform:uppercase}
+    .brand-tab small{font-weight:800;opacity:.8;color:var(--magenta)}
+
+    /* ===== Sección de historia de marca ===== */
+    .brand-history {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--soft-shadow);
+      padding: 2rem;
+      margin-bottom: 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .brand-history::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--teal);
+    }
+    
+    .brand-history-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .brand-history-header h2 {
+      font-size: 1.8rem;
+      color: var(--teal);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .brand-history-content {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+    
+    .history-text {
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+    
+    .history-text p {
+      margin-bottom: 1rem;
+    }
+    
+    .history-highlights {
+      background: rgba(1,123,128,.05);
+      border-left: 3px solid var(--magenta);
+      padding: 1.5rem;
+      border-radius: 0 var(--radius) var(--radius) 0;
+    }
+    
+    .history-highlights h4 {
+      color: var(--teal);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+    
+    .history-highlights ul {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .history-highlights li {
+      margin-bottom: .8rem;
+      display: flex;
+      align-items: flex-start;
+      gap: .5rem;
+    }
+    
+    .history-highlights li i {
+      color: var(--magenta);
+      margin-top: .2rem;
+      flex-shrink: 0;
+    }
+    
+    /* Botón Ver Productos - Centrado */
+    .products-button-container {
+      text-align: center;
+      margin: 3rem 0;
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(1,123,128,.03) 0%, rgba(213,0,109,.03) 100%);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+    
+    .btn-ver-productos-grande {
+      display: inline-flex;
+      align-items: center;
+      gap: .75rem;
+      padding: 1rem 2.5rem;
+      background: var(--magenta);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 10px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border: 2px solid var(--magenta);
+      transition: .3s;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 15px rgba(213,0,109,.2);
+    }
+    
+    .btn-ver-productos-grande:hover {
+      filter: brightness(1.1);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(213,0,109,.3);
+    }
+    
+    .btn-ver-productos-grande i {
+      font-size: 1.3rem;
+    }
+
+    /* ===== Secciones por marca ===== */
+    .brand-section{display:none;max-width:1200px;margin:0 auto}
+    .brand-section.active{display:block;animation:fade .35s ease}
+    @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+    /* ===== Footer ===== */
+    footer{
+      border-top:1px solid var(--border);
+      background:#fff;
+      color:#313131;
+      padding: 22px 1rem;
+      margin-top: 40px;
+    }
+    
+    footer .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    
+    footer a{color:var(--teal);text-decoration:none; font-weight: 600;}
+    footer a:hover{color:var(--magenta);}
+
+    /* ===== Responsive ===== */
+    @media (max-width:1024px){ 
+      .brand-history-content {grid-template-columns: 1fr}
+      .brand-tabs {grid-template-columns: repeat(2, 1fr)}
+    }
+    
+    @media (max-width:768px){
+      main {padding: 2rem 1rem}
+      .page-title h1 {font-size: 2rem}
+      .brand-history {padding: 1.5rem}
+      .brand-history-header {flex-direction: column; align-items: flex-start;}
+      .brand-history-header h2 {font-size: 1.5rem}
+      .btn-ver-productos-grande {padding: .9rem 2rem; font-size: 1rem}
+    }
+    
+    @media (max-width:640px){ 
+      nav {justify-content: center; margin-top: 10px;}
+      .brand-tabs {grid-template-columns: 1fr}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header>
+    <div class="logo" aria-label="Global Horizon">
+      <img 
+        class="logo-img"
+        src="../public/imagenes/logo-GH.png"
+        alt="Global Horizon Logo"
+        onerror="this.style.outline='1px dashed #f55'; this.alt='(logo no encontrado)';"
+      />
+    </div>
+    
+    <nav>
+      <a href="../public/index.html">Inicio</a>
+      <a href="../public/nosotros.html">Nosotros</a>
+      <a href="../public/marcas.html">Marcas</a>
+      <a href="../public/productos.html">Productos</a>
+      <a href="../public/campañas.html">Campañas</a>       
+      <a href="../public/cobertura.html">Cobertura</a>
+      <a href="../public/index.html#contacto">Contacto</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ===== Título ===== -->
+    <div class="page-title">
+      <h1>Marcas que distribuimos</h1>
+      <p>Conoce la historia y filosofía de cada marca líder en SimRacing</p>
+    </div>
+
+    <!-- ===== TABS (LOGOS) ===== -->
+    <div class="brand-tabs" role="tablist" aria-label="Seleccionar marca">
+      <button class="brand-tab active" data-target="playseat" role="tab" aria-selected="true">
+        <img src="imagenes/playseat.png" alt="Playseat logo"/>
+        <span>Playseat</span>
+      </button>
+      <button class="brand-tab" data-target="moza" role="tab" aria-selected="false">
+        <img src="imagenes/moza.png" alt="MOZA Racing logo"/>
+        <span>MOZA Racing</span>
+      </button>
+      <button class="brand-tab" data-target="thrustmaster" role="tab" aria-selected="false">
+        <img src="imagenes/ThrustmasterBlack.png" alt="Thrustmaster logo"/>
+        <span>Thrustmaster</span>
+      </button>
+      <button class="brand-tab" data-target="dbox" role="tab" aria-selected="false">
+        <img src="imagenes/dbox.png" alt="D-BOX logo"/>
+        <span>D‑BOX <small>(Nueva)</small></span>
+      </button>
+    </div>
+
+    <!-- ===== PLAYSEAT ===== -->
+    <section id="playseat" class="brand-section active" aria-label="Playseat">
+      <!-- Historia de Playseat -->
+      <div class="brand-history">
+        <div class="brand-history-header">
+          <h2><i class="fas fa-history"></i> Playseat - Historia</h2>
+        </div>
+        
+        <div class="brand-history-content">
+          <div class="history-text">
+            <p><strong>Playseat</strong> fue fundada en los Países Bajos en 2001 por un grupo de entusiastas del gaming y las carreras que buscaban crear la experiencia de simulación más realista posible. Lo que comenzó como un pequeño proyecto de pasión se ha convertido en una de las marcas más reconocidas mundialmente en asientos y rigs de simulación.</p>
+            
+            <p>La compañía se especializa en el diseño y fabricación de asientos de simulación profesional para gaming, racing, flight y farming. Con más de 20 años en el mercado, Playseat ha establecido colaboraciones con equipos profesionales de F1, NASCAR y equipos de esports, desarrollando productos que cumplen con los más altos estándares de calidad y ergonomía.</p>
+            
+            <p>Su filosofía se basa en tres pilares: <strong>innovación</strong> constante en materiales y diseños, <strong>ergonomía</strong> adaptada a largas sesiones de juego, y <strong>compatibilidad</strong> con todos los principales fabricantes de hardware de simulación del mercado.</p>
+          </div>
+          
+          <div class="history-highlights">
+            <h4>Lo que ofrece Playseat:</h4>
+            <ul>
+              <li><i class="fas fa-check"></i> Asientos de simulación profesionales</li>
+              <li><i class="fas fa-check"></i> Diseños ergonómicos certificados</li>
+              <li><i class="fas fa-check"></i> Compatibilidad universal</li>
+              <li><i class="fas fa-check"></i> Materiales de alta durabilidad</li>
+              <li><i class="fas fa-check"></i> Soluciones plegables y fijas</li>
+              <li><i class="fas fa-check"></i> Soporte para Direct Drive</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botón para ver productos Playseat -->
+      <div class="products-button-container">
+        <h3 style="color: var(--teal); margin-bottom: 1rem; font-weight: 900; text-transform: uppercase;">
+          Explora el catálogo completo de Playseat
+        </h3>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+          Descubre toda nuestra gama de asientos y rigs de simulación profesional
+        </p>
+        <a href="../public/productos.html" class="btn-ver-productos-grande">
+          <i class="fas fa-shopping-cart"></i> Ver Productos Playseat
+        </a>
+      </div>
+    </section>
+
+    <!-- ===== MOZA RACING ===== -->
+    <section id="moza" class="brand-section" aria-label="MOZA Racing">
+      <!-- Historia de MOZA -->
+      <div class="brand-history">
+        <div class="brand-history-header">
+          <h2><i class="fas fa-history"></i> MOZA Racing - Historia</h2>
+        </div>
+        
+        <div class="brand-history-content">
+          <div class="history-text">
+            <p><strong>MOZA Racing</strong> es una marca relativamente nueva pero que ha revolucionado el mercado del simracing con sus innovadoras soluciones Direct Drive. Fundada en 2020 en China, MOZA forma parte del grupo Gudsen, una empresa con más de 10 años de experiencia en tecnología de estabilización de cámaras y sistemas electrónicos de precisión.</p>
+            
+            <p>La marca surgió con el objetivo de democratizar la tecnología Direct Drive, tradicionalmente reservada para simuladores profesionales de alto costo. MOZA combinó su experiencia en motores sin escobillas y sistemas de control electrónico para crear bases de volante Direct Drive accesibles sin comprometer la calidad o el rendimiento.</p>
+            
+            <p>En solo tres años, MOZA ha ganado reconocimiento mundial por ofrecer productos con una excelente relación calidad-precio, atrayendo tanto a entusiastas como a competidores profesionales. Su enfoque en la integración de ecosistemas completos (bases, volantes, pedales y accesorios) ha sido clave para su rápido crecimiento en el competitivo mercado del simracing.</p>
+          </div>
+          
+          <div class="history-highlights">
+            <h4>Lo que ofrece MOZA:</h4>
+            <ul>
+              <li><i class="fas fa-check"></i> Tecnología Direct Drive accesible</li>
+              <li><i class="fas fa-check"></i> Motores sin escobillas de alta precisión</li>
+              <li><i class="fas fa-check"></i> Ecosistema completo integrado</li>
+              <li><i class="fas fa-check"></i> Software personalizable avanzado</li>
+              <li><i class="fas fa-check"></i> Compatibilidad multiplataforma</li>
+              <li><i class="fas fa-check"></i> Innovación constante en diseño</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botón para ver productos MOZA -->
+      <div class="products-button-container">
+        <h3 style="color: var(--teal); margin-bottom: 1rem; font-weight: 900; text-transform: uppercase;">
+          Descubre los productos MOZA Racing
+        </h3>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+          Desde bases Direct Drive hasta pedales loadcell y accesorios premium
+        </p>
+        <a href="../public/productos.html" class="btn-ver-productos-grande">
+          <i class="fas fa-tachometer-alt"></i> Ver Productos MOZA Racing
+        </a>
+      </div>
+    </section>
+
+    <!-- ===== THRUSTMASTER ===== -->
+    <section id="thrustmaster" class="brand-section" aria-label="Thrustmaster">
+      <!-- Historia de Thrustmaster -->
+      <div class="brand-history">
+        <div class="brand-history-header">
+          <h2><i class="fas fa-history"></i> Thrustmaster - Historia</h2>
+        </div>
+        
+        <div class="brand-history-content">
+          <div class="history-text">
+            <p><strong>Thrustmaster</strong> es una marca legendaria en el mundo del gaming con más de 30 años de historia. Fundada en Francia en 1990, comenzó fabricando joysticks para simuladores de vuelo y rápidamente se expandió a otros periféricos de gaming. La compañía es conocida por su enfoque en la precisión y realismo, colaborando frecuentemente con desarrolladores de juegos y pilotos profesionales para optimizar sus productos.</p>
+            
+            <p>A lo largo de las décadas, Thrustmaster ha sido pionera en numerosas tecnologías, incluyendo la fuerza de retroalimentación (force feedback) en volantes de simracing y sistemas HOTAS (Hands On Throttle And Stick) para simuladores de vuelo. Su icónica línea de productos ha sido utilizada por generaciones de gamers, desde el legendario joystick FCS hasta los modernos volantes Direct Drive.</p>
+            
+            <p>Thrustmaster forma parte del grupo Guillemot Corporation, lo que le permite mantener altos estándares de calidad y continuar innovando. La marca mantiene un compromiso firme con la retrocompatibilidad, asegurando que sus productos sigan siendo relevantes y funcionales a lo largo del tiempo.</p>
+          </div>
+          
+          <div class="history-highlights">
+            <h4>Lo que ofrece Thrustmaster:</h4>
+            <ul>
+              <li><i class="fas fa-check"></i> Más de 30 años de experiencia</li>
+              <li><i class="fas fa-check"></i> Tecnología Force Feedback avanzada</li>
+              <li><i class="fas fa-check"></i> Sistemas HOTAS profesionales</li>
+              <li><i class="fas fa-check"></i> Colaboraciones oficiales con licencias</li>
+              <li><i class="fas fa-check"></i> Compatibilidad multiplataforma</li>
+              <li><i class="fas fa-check"></i> Constante innovación tecnológica</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botón para ver productos Thrustmaster -->
+      <div class="products-button-container">
+        <h3 style="color: var(--teal); margin-bottom: 1rem; font-weight: 900; text-transform: uppercase;">
+          Conoce los productos Thrustmaster
+        </h3>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+          Volantes, joysticks, pedales y sistemas completos de simulación
+        </p>
+        <a href="../public/productos.html" class="btn-ver-productos-grande">
+          <i class="fas fa-gamepad"></i> Ver Productos Thrustmaster
+        </a>
+      </div>
+    </section>
+
+    <!-- ===== D-BOX ===== -->
+    <section id="dbox" class="brand-section" aria-label="D-BOX">
+      <!-- Historia de D-BOX -->
+      <div class="brand-history">
+        <div class="brand-history-header">
+          <h2><i class="fas fa-history"></i> D‑BOX - Historia</h2>
+        </div>
+        
+        <div class="brand-history-content">
+          <div class="history-text">
+            <p><strong>D‑BOX</strong> es la empresa líder mundial en tecnología de movimiento háptico, fundada en 1998 en Canadá. Inicialmente, la compañía se enfocó en el mercado del cine, desarrollando sistemas de movimiento para salas de cine premium que permitían a los espectadores "sentir" la acción en la pantalla.</p>
+            
+            <p>Con el tiempo, D‑BOX trasladó su experiencia en movimiento háptico de precisión al mercado del entretenimiento en el hogar y los simuladores profesionales. Sus tecnologías patentadas ofrecen una inmersión sin precedentes, reproduciendo con precisión las sensaciones de movimiento, texturas y fuerzas que experimentarían en la realidad.</p>
+            
+            <p>En el mundo del simracing, D‑BOX ha establecido el estándar dorado para sistemas de movimiento, siendo utilizado por equipos profesionales de F1, NASCAR y pilotos que buscan el máximo realismo en sus entrenamientos. La compañía continúa innovando, expandiendo su tecnología a nuevos mercados mientras mantiene su posición como referente en experiencias hápticas de alta fidelidad.</p>
+          </div>
+          
+          <div class="history-highlights">
+            <h4>Lo que ofrece D‑BOX:</h4>
+            <ul>
+              <li><i class="fas fa-check"></i> Tecnología háptica de precisión</li>
+              <li><i class="fas fa-check"></i> Sistemas de movimiento profesional</li>
+              <li><i class="fas fa-check"></i> Experiencia de inmersión total</li>
+              <li><i class="fas fa-check"></i> Compatibilidad con todos los rigs</li>
+              <li><i class="fas fa-check"></i> Software avanzado de calibración</li>
+              <li><i class="fas fa-check"></i> Certificaciones profesionales</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botón para ver productos D-BOX -->
+      <div class="products-button-container">
+        <h3 style="color: var(--teal); margin-bottom: 1rem; font-weight: 900; text-transform: uppercase;">
+          Explora la tecnología D‑BOX
+        </h3>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+          Sistemas de movimiento háptico y experiencias de inmersión total
+        </p>
+        <a href="../public/productos.html" class="btn-ver-productos-grande">
+          <i class="fas fa-vr-cardboard"></i> Ver Productos D‑BOX
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p style="font-weight:600">
+        © 2026 Global Horizon SpA. Todos los derechos reservados.
+        &nbsp;·&nbsp;
+        <a href="mailto:info@globalhorizon.cl">info@globalhorizon.cl</a>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    // Tabs de marca
+    const tabs = document.querySelectorAll('.brand-tab');
+    const sections = document.querySelectorAll('.brand-section');
+
+    function activate(targetId){
+      tabs.forEach(t=>{
+        const active = (t.dataset.target === targetId);
+        t.classList.toggle('active', active);
+        t.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+      sections.forEach(s=> s.classList.toggle('active', s.id === targetId));
+      history.replaceState(null, '', '#' + targetId);
+      
+      // Scroll suave a la sección activa
+      document.getElementById(targetId).scrollIntoView({behavior: 'smooth', block: 'start'});
+    }
+
+    tabs.forEach(tab=> tab.addEventListener('click', ()=> activate(tab.dataset.target)));
+
+    // Activar hash si viene en la URL
+    window.addEventListener('DOMContentLoaded', ()=>{
+      const hash = location.hash.replace('#','');
+      if(hash && document.getElementById(hash)){ 
+        activate(hash); 
+      }
+    });
+  </script>
+</body>
+</html>
